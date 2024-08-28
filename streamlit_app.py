@@ -23,13 +23,14 @@ file_id = drive_url.split("/d/")[1].split("/edit")[0]
 download_url = f"https://drive.google.com/uc?id={file_id}"
 
 # Carrega a tabela TACO
-if drive_url:
-    try:
-        # Load data
-        df_taco = load_data_from_drive(download_url)
-        st.success("Tabela carregada com sucesso!")
-    except Exception as e:
-        st.error(f"Erro ao carregar a tabela: {e}")
+df_taco = load_data_from_drive(download_url)
+#if drive_url:
+#    try:
+#        # Load data
+#        df_taco = load_data_from_drive(download_url)
+#        st.success("Tabela carregada com sucesso!")
+#    except Exception as e:
+#        st.error(f"Erro ao carregar a tabela: {e}")
 
 # Input fields
 peso = st.number_input("Peso (kg)", min_value=1, value=80, step=1)

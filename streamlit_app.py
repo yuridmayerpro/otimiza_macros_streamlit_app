@@ -19,6 +19,7 @@ drive_url = st.text_input("URL do arquivo no Google Drive")
 file_id = drive_url.split("/d/")[1].split("/edit")[0]
 download_url = f"https://drive.google.com/uc?id={file_id}"
 
+# Carrega a tabela TACO
 if drive_url:
     try:
         # Load data

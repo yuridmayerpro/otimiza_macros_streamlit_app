@@ -20,7 +20,12 @@ file_id = drive_url.split("/d/")[1].split("/edit")[0]
 download_url = f"https://drive.google.com/uc?id={file_id}"
 
 if drive_url:
-    df_taco = load_data_from_drive(download_url)
+    try:
+        # Load data
+        df_taco = load_data_from_drive(download_url)
+        st.success("Tabela carregada com sucesso!")
+    except Exception as e:
+        st.error(f"Erro ao carregar a tabela: {e}")
 
 
 

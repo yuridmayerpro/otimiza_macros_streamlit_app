@@ -15,7 +15,8 @@ def load_data_from_drive(url):
 st.title("Calculadora de Macronutrientes")
 
 # URL to the Google Drive file containing the df_taco dataset
-drive_url = st.text_input("URL do arquivo no Google Drive")
+url = 'https://docs.google.com/spreadsheets/d/1rhFcWtHXq7e1G6UaoiRid09OeeiuVbW4/edit?usp=drive_link&ouid=114098703207826352607&rtpof=true&sd=true'
+drive_url = st.text_input("URL do arquivo no Google Drive", value=url)
 
 # Extrair o FILE_ID e criar a URL de download
 file_id = drive_url.split("/d/")[1].split("/edit")[0]

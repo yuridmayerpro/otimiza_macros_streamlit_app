@@ -6,7 +6,7 @@ import pandas as pd
 @st.cache_data
 def load_data_from_drive(url):
     output = 'df_taco.xlsx'
-    gdown.download(url, output, quiet=False)
+    gdown.download(url, output, quiet=True)
     df = pd.read_excel(output)
     return df
 

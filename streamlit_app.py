@@ -20,13 +20,7 @@ file_id = drive_url.split("/d/")[1].split("/edit")[0]
 download_url = f"https://drive.google.com/uc?id={file_id}"
 
 if drive_url:
-    try:
-        df_taco = load_data_from_drive(download_url)
-        st.write("Tabela TACO")
-        with st.modal("Aviso"):
-            st.write("Tabela TACO carregada")
-    except:
-        with st.modal("Aviso"):
-            st.write("Não foi possível carregar a tabela TACO")
-        
+    df_taco = load_data_from_drive(download_url)
+
+
 

@@ -96,8 +96,16 @@ st.number_input('Limite Superior', key='limite_superior', step=1)
 # Botão para adicionar alimento
 st.button('Adicionar Alimento', on_click=adicionar_alimento)
 
-# Exibir o dicionário de alimentos e limites
+# Exibir o dicionário de alimentos e limites em formato de tabela
 if st.session_state['alimentos']:
     st.subheader('Alimentos Selecionados:')
-    for alimento, limites in st.session_state['alimentos'].items():
-        st.write(f'{alimento}: Limite Inferior = {limites[0]}, Limite Superior = {limites[1]}')
+    # Cria um DataFrame para exibir em formato de tabela
+    alimentos_df = pd.DataFrame(
+        list(st.session_state['alimentos'].items()),
+        columns=['Alimento', 'Limites']
+    )
+    alimentos_df['Limite Inferior'] = alimentos_df['Limites'].apply(lambda x: x[0])
+    alimentos_df['Limite Superior'] = alimentos_df['Limites'].apply(lambda x: x[1])
+    alimentos_df = alimentos_df.drop(columns=['Limites'])
+    
+    st.dataframe(alimentos_df, use_container_width=True)

@@ -128,7 +128,7 @@ def run_optimization(calorias_alvo, proteina_alvo, carboidrato_alvo, alimentos, 
     resultados = {}
     resultados['study'], resultados['best_params'], resultados['best_validity'], resultados['calorias_alvo'], \
         resultados['gramas_proteina'], resultados['gramas_carboidrato'], resultados['df_final'] = \
-        otimiza(alimentos, peso, idade, sexo, objetivo, calorias_add, proteina_add, carboidrato_add, n_trials, df_taco)
+        otimiza(calorias_alvo, proteina_alvo, carboidrato_alvo, alimentos, peso, idade, sexo, objetivo, calorias_add, proteina_add, carboidrato_add, n_trials, df_taco)
         
     # Exibir resultados
     st.subheader('Resultado Final')

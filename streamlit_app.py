@@ -149,20 +149,20 @@ def run_optimization(alimentos, peso, idade, sexo, objetivo, calorias_add, prote
 st.title('Otimização de Nutrição')
 
 # Widgets para entrada de dados do usuário
-st.session_state['calorias_add'] = st.number_input('Calorias Adicionais', value=0)
-st.session_state['proteina_add'] = st.number_input('Proteína Adicional (g)', value=0)
-st.session_state['carboidrato_add'] = st.number_input('Carboidrato Adicional (g)', value=0)
-st.session_state['n_trials'] = st.number_input('Número de Trials', value=100)
+calorias_add = st.number_input('Calorias Adicionais', value=0)
+proteina_add = st.number_input('Proteína Adicional (g)', value=0)
+carboidrato_add = st.number_input('Carboidrato Adicional (g)', value=0)
+n_trials = st.number_input('Número de Trials', value=100)
 
 if st.button('Executar Otimização'):
     with st.spinner('Executando otimização...'):
-        run_optimization(st.session_state['alimentos'],
-                         st.session_state['peso'], 
-                         st.session_state['idade'], 
-                         st.session_state['sexo'], 
-                         st.session_state['objetivo'], 
-                         st.session_state['calorias_add'], 
-                         st.session_state['proteina_add'], 
-                         st.session_state['carboidrato_add'], 
-                         st.session_state['n_trials'])
+        run_optimization(alimentos,
+                         peso, 
+                         idade, 
+                         sexo, 
+                         objetivo, 
+                         calorias_add, 
+                         proteina_add, 
+                         carboidrato_add, 
+                         n_trials)
         st.success('Otimização concluída!')

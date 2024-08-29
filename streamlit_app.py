@@ -108,4 +108,4 @@ if st.session_state['alimentos']:
     alimentos_df['Limite Superior'] = alimentos_df['Limites'].apply(lambda x: x[1])
     alimentos_df = alimentos_df.drop(columns=['Limites'])
     
-    st.dataframe(alimentos_df, use_container_width=True)
+    st.dataframe(alimentos_df.style.hide(axis="index"), use_container_width=True)

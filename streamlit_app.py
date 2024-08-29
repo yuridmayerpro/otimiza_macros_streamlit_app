@@ -5,8 +5,6 @@ import numpy as np
 from calcula_macros import calcula_tmb, calcula_metas_macronutrientes1, calcula_metas_macronutrientes2, calcula_metas_macronutrientes3
 from otimizador import objective, early_stopping_callback, otimiza
 
-
-
 ####################### IMPORTAÇÃO DOS DADOS NECESSÁRIOS #######################
 # Function to load DataFrame from Google Drive
 @st.cache_data
@@ -20,7 +18,6 @@ st.title("Calculadora de Macronutrientes")
 
 # URL to the Google Drive file containing the df_taco dataset
 drive_url = 'https://docs.google.com/spreadsheets/d/1rhFcWtHXq7e1G6UaoiRid09OeeiuVbW4/edit?usp=drive_link&ouid=114098703207826352607&rtpof=true&sd=true'
-#drive_url = st.text_input("URL do arquivo no Google Drive", value=url)
 
 # Extrair o FILE_ID e criar a URL de download
 file_id = drive_url.split("/d/")[1].split("/edit")[0]
@@ -28,39 +25,52 @@ download_url = f"https://drive.google.com/uc?id={file_id}"
 
 # Carrega a tabela TACO
 df_taco = load_data_from_drive(download_url)
-#if drive_url:
-#    try:
-#        # Load data
-#        df_taco = load_data_from_drive(download_url)
-#        st.success("Tabela carregada com sucesso!")
-#    except Exception as e:
-#        st.error(f"Erro ao carregar a tabela: {e}")
-
-
 
 ####################### CÁLCULO DOS MACROS #######################
+# Inicializa o session_state se não existir
+if 'peso' not in st.session_state:
+    st.session_state['peso'] = 80
+if 'idade' not in st.session_state:
+    st.session_state['idade'] = 30
+if 'sexo' not in st.session_state:
+    st.session_state['sexo'] = 'm'
+if 'objetivo' not in st.session_state:
+    st.session_state['objetivo'] = 'hipertrofia'
+
 # Input fields
-peso = st.number_input("Peso (kg)", min_value=1, value=80, step=1)
-idade = st.number_input("Idade", min_value=0, value=30, step=1)
-sexo = st.selectbox("Sexo", options=['m', 'f'])
-objetivo = st.selectbox("Objetivo", options=['hipertrofia'])
+st.session_state['peso'] = st.number_input("Peso (kg)", min_value=1, value=st.session_state['peso'], step=1)
+st.session_state['idade'] = st.number_input("Idade", min_value=0, value=st.session_state['idade'], step=1)
+st.session_state['sexo'] = st.selectbox("Sexo", options=['m', 'f'], index=['m', 'f'].index(st.session_state['sexo']))
+st.session_state['objetivo'] = st.selectbox("Objetivo", options=['hipertrofia'], index=['hipertrofia'].index(st.session_state['objetivo']))
 
 # Botão para calcular os macronutrientes
 if st.button("Calcular Macros"):
     # Calcula os macros
-    calorias_alvo1, gramas_proteina1, gramas_carboidrato1, gramas_gordura1 = calcula_metas_macronutrientes1(peso, idade, sexo, objetivo)
-    calorias_alvo2, gramas_proteina2, gramas_carboidrato2, gramas_gordura2 = calcula_metas_macronutrientes2(peso, idade, objetivo)
-    calorias_alvo3, gramas_proteina3, gramas_carboidrato3, gramas_gordura3 = calcula_metas_macronutrientes3(peso, idade, sexo, objetivo)
-
-    calorias_alvo = int(round(np.average([calorias_alvo1, calorias_alvo2, calorias_alvo3]), 0))
-    proteina_alvo = int(round(np.average([gramas_proteina1, gramas_proteina2, gramas_proteina3]), 0))
-    carboidrato_alvo = int(round(np.average([gramas_carboidrato1, gramas_carboidrato2, gramas_carboidrato3]), 0))
+    calorias_alvo1, gramas_proteina1, gramas_carboidrato1, gramas_gordura1 = calcula_metas_macronutrientes1(
+        st.session_state['peso'], 
+        st.session_state['idade'], 
+        st.session_state['sexo'], 
+        st.session_state['objetivo']
+    )
+    calorias_alvo2, gramas_proteina2, gramas_carboidrato2, gramas_gordura2 = calcula_metas_macronutrientes2(
+        st.session_state['peso'], 
+        st.session_state['idade'], 
+        st.session_state['objetivo']
+    )
+    calorias_alvo3, gramas_proteina3, gramas_carboidrato3, gramas_gordura3 = calcula_metas_macronutrientes3(
+        st.session_state['peso'], 
+        st.session_state['idade'], 
+        st.session_state['sexo'], 
+        st.session_state['objetivo']
+    )
     
-    st.write(f"Calorias alvo: {calorias_alvo} kcal")
-    st.write(f"Proteínas alvo: {proteina_alvo} g")
-    st.write(f"Carboidratos alvo: {carboidrato_alvo} g")
-
-
+    st.session_state['calorias_alvo'] = int(round(np.average([calorias_alvo1, calorias_alvo2, calorias_alvo3]), 0))
+    st.session_state['proteina_alvo'] = int(round(np.average([gramas_proteina1, gramas_proteina2, gramas_proteina3]), 0))
+    st.session_state['carboidrato_alvo'] = int(round(np.average([gramas_carboidrato1, gramas_carboidrato2, gramas_carboidrato3]), 0))
+    
+    st.write(f"Calorias alvo: {st.session_state['calorias_alvo']} kcal")
+    st.write(f"Proteínas alvo: {st.session_state['proteina_alvo']} g")
+    st.write(f"Carboidratos alvo: {st.session_state['carboidrato_alvo']} g")
 
 ####################### SELEÇÃO DOS ALIMENTOS PELO USUÁRIO #######################
 # Inicializa o dicionário na sessão, se ainda não existir
@@ -69,16 +79,15 @@ if 'alimentos' not in st.session_state:
 
 # Função para adicionar alimento ao dicionário
 def adicionar_alimento():
-    alimento = st.session_state.alimento
-    limite_inferior = st.session_state.limite_inferior
-    limite_superior = st.session_state.limite_superior
+    alimento = st.session_state['alimento']
+    limite_inferior = st.session_state['limite_inferior']
+    limite_superior = st.session_state['limite_superior']
     if alimento and limite_inferior is not None and limite_superior is not None:
         st.session_state['alimentos'][alimento] = (limite_inferior, limite_superior)
         # Resetando os campos de entrada após a adição
-        st.session_state.alimento = df_taco['Alimento'].tolist()[0] if not df_taco['Alimento'].empty else ''
-        st.session_state.limite_inferior = 0
-        st.session_state.limite_superior = 0
-        #st.success(f'Alimento adicionado: {alimento} com limites ({limite_inferior}, {limite_superior})')
+        st.session_state['alimento'] = df_taco['Alimento'].tolist()[0] if not df_taco['Alimento'].empty else ''
+        st.session_state['limite_inferior'] = 0
+        st.session_state['limite_superior'] = 0
 
 # Interface do usuário
 st.title('Adicionar Alimentos e Definir Limites')
@@ -111,5 +120,58 @@ if st.session_state['alimentos']:
     
     st.dataframe(alimentos_df, use_container_width=True, hide_index=True)
 
-
 ####################### EXECUTA A OTIMIZAÇÃO #######################
+# Função para executar a otimização e exibir os resultados
+def run_optimization(alimentos, peso, idade, sexo, objetivo, calorias_add, proteina_add, carboidrato_add, n_trials):
+    global resultados
+    resultados = {}
+    resultados['study'], resultados['best_params'], resultados['best_validity'], resultados['calorias_alvo'], \
+        resultados['gramas_proteina'], resultados['gramas_carboidrato'], resultados['df_final'] = \
+        otimiza(alimentos, peso, idade, sexo, objetivo, calorias_add, proteina_add, carboidrato_add, n_trials, df_taco)
+        
+    # Exibir resultados
+    st.subheader('Resultado Final')
+    st.dataframe(resultados['df_final'].style.format({'massa': '{:.1f}', 'calorias': '{:.1f}', 'proteinas': '{:.1f}', 'carboidratos': '{:.1f}'}))
+
+    # Verificando os valores finais
+    st.subheader('Resumo')
+    calorias_totais = resultados['df_final'].calorias.sum()
+    proteinas_totais = resultados['df_final'].proteinas.sum()
+    carboidratos_totais = resultados['df_final'].carboidratos.sum()
+
+    st.write('Resultado:')
+    st.write(f'Calorias: {calorias_totais:.1f}')
+    st.write(f'Proteínas: {proteinas_totais:.1f}')
+    st.write(f'Carboidratos: {carboidratos_totais:.1f}')
+
+    st.write('\nMetas:')
+    st.write(f'Calorias: {resultados["calorias_alvo"]}')
+    st.write(f'Proteínas: {resultados["gramas_proteina"]}')
+    st.write(f'Carboidratos: {resultados["gramas_carboidrato"]}')
+
+    st.write('\nDesvios:')
+    st.write(f'Calorias: {calorias_totais - resultados["calorias_alvo"]:.1f}')
+    st.write(f'Proteínas: {proteinas_totais - resultados["gramas_proteina"]:.1f}')
+    st.write(f'Carboidratos: {carboidratos_totais - resultados["gramas_carboidrato"]:.1f}')
+
+# Interface do usuário no Streamlit
+st.title('Otimização de Nutrição')
+
+# Widgets para entrada de dados do usuário
+calorias_add = st.number_input('Calorias Adicionais', value=0)
+proteina_add = st.number_input('Proteína Adicional (g)', value=0)
+carboidrato_add = st.number_input('Carboidrato Adicional (g)', value=0)
+n_trials = st.number_input('Número de Trials', value=100)
+
+if st.button('Executar Otimização'):
+    with st.spinner('Executando otimização...'):
+        run_optimization(st.session_state['alimentos'],
+                         st.session_state['peso'], 
+                         st.session_state['idade'], 
+                         st.session_state['sexo'], 
+                         st.session_state['objetivo'], 
+                         calorias_add, 
+                         proteina_add, 
+                         carboidrato_add, 
+                         n_trials)
+        st.success('Otimização concluída!')

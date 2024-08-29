@@ -62,41 +62,40 @@ if st.button("Calcular Macros"):
 
 
 ####################### SELEÇÃO DOS ALIMENTOS PELO USUÁRIO #######################
-# Dicionário para armazenar os alimentos e seus limites
+# Inicializa o dicionário para armazenar os alimentos e seus limites
 alimentos = {}
 
 # Função para adicionar alimento ao dicionário
 def adicionar_alimento():
-    alimento = st.session_state['alimento']
-    limite_inferior = st.session_state['limite_inferior']
-    limite_superior = st.session_state['limite_superior']
-    
+    alimento = st.session_state.alimento
+    limite_inferior = st.session_state.limite_inferior
+    limite_superior = st.session_state.limite_superior
     if alimento and limite_inferior is not None and limite_superior is not None:
         alimentos[alimento] = (limite_inferior, limite_superior)
-        st.session_state['alimento'] = alimentos
-        st.session_state['limite_inferior'] = limite_inferior
-        st.session_state['limite_superior'] = limite_superior
+        st.session_state.alimento = ''
+        st.session_state.limite_inferior = 0
+        st.session_state.limite_superior = 0
         st.success(f'Alimento adicionado: {alimento} com limites ({limite_inferior}, {limite_superior})')
 
-# Título da aplicação
-st.title("Seleção de Alimentos e Limites")
+# Interface do usuário
+st.title('Adicionar Alimentos e Definir Limites')
 
-# Widget de dropdown para selecionar o alimento
+# Dropdown para selecionar o alimento
 st.selectbox(
-    'Selecione um Alimento',
+    'Selecione o Alimento',
     df_taco['Alimento'].tolist(),
     key='alimento'
 )
 
-# Widgets para entrada dos limites inferior e superior
-st.number_input('Limite Inferior', key='limite_inferior')
-st.number_input('Limite Superior', key='limite_superior')
+# Widgets para limites inferiores e superiores
+st.number_input('Limite Inferior', key='limite_inferior', step=1)
+st.number_input('Limite Superior', key='limite_superior', step=1)
 
-# Botão para adicionar o alimento à lista
+# Botão para adicionar alimento
 st.button('Adicionar Alimento', on_click=adicionar_alimento)
 
-# Exibindo os alimentos e seus limites definidos em formato de tabela
+# Exibir o dicionário de alimentos e limites
 if alimentos:
-    st.write("Alimentos adicionados:")
-    alimentos_df = pd.DataFrame(alimentos)
-    st.table(alimentos_df)
+    st.subheader('Alimentos Selecionados:')
+    for alimento, limites in alimentos.items():
+        st.write(f'{alimento}: Limite Inferior = {limites[0]}, Limite Superior = {limites[1]}')

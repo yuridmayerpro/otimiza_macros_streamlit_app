@@ -67,13 +67,13 @@ if st.button("Calcular Macros"):
         objetivo
     )
     
-    st.session_state['calorias_alvo'] = int(round(np.average([calorias_alvo1, calorias_alvo2, calorias_alvo3]), 0))
-    st.session_state['proteina_alvo'] = int(round(np.average([gramas_proteina1, gramas_proteina2, gramas_proteina3]), 0))
-    st.session_state['carboidrato_alvo'] = int(round(np.average([gramas_carboidrato1, gramas_carboidrato2, gramas_carboidrato3]), 0))
+    calorias_alvo = int(round(np.average([calorias_alvo1, calorias_alvo2, calorias_alvo3]), 0))
+    proteina_alvo = int(round(np.average([gramas_proteina1, gramas_proteina2, gramas_proteina3]), 0))
+    scarboidrato_alvo = int(round(np.average([gramas_carboidrato1, gramas_carboidrato2, gramas_carboidrato3]), 0))
     
-    st.write(f"Calorias alvo: {st.session_state['calorias_alvo']} kcal")
-    st.write(f"Proteínas alvo: {st.session_state['proteina_alvo']} g")
-    st.write(f"Carboidratos alvo: {st.session_state['carboidrato_alvo']} g")
+    st.write(f"Calorias alvo: {calorias_alvo} kcal")
+    st.write(f"Proteínas alvo: {proteina_alvo} g")
+    st.write(f"Carboidratos alvo: {carboidrato_alvo} g")
 
 
 

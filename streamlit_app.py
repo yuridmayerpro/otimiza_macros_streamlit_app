@@ -65,10 +65,6 @@ if st.button("Calcular Macros"):
 # Inicializa o dicionário na sessão, se ainda não existir
 if 'alimentos' not in st.session_state:
     st.session_state['alimentos'] = {}
-    
-# Inicializa o valor do dropdown se necessário
-if 'alimento' not in st.session_state:
-    st.session_state['alimento'] = df_taco['Alimento'].tolist()[0]  # Definindo um valor padrão
 
 # Função para adicionar alimento ao dicionário
 def adicionar_alimento():
@@ -77,7 +73,8 @@ def adicionar_alimento():
     limite_superior = st.session_state.limite_superior
     if alimento and limite_inferior is not None and limite_superior is not None:
         st.session_state['alimentos'][alimento] = (limite_inferior, limite_superior)
-        st.session_state.alimento = df_taco['Alimento'].tolist()[0]  # Resetando para o valor padrão
+        # Resetando os campos de entrada após a adição
+        st.session_state.alimento = df_taco['Alimento'].tolist()[0] if not df_taco['Alimento'].empty else ''
         st.session_state.limite_inferior = 0
         st.session_state.limite_superior = 0
         #st.success(f'Alimento adicionado: {alimento} com limites ({limite_inferior}, {limite_superior})')

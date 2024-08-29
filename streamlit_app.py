@@ -122,7 +122,7 @@ if st.session_state['alimentos']:
 
 ####################### EXECUTA A OTIMIZAÇÃO #######################
 # Função para executar a otimização e exibir os resultados
-def run_optimization(alimentos, peso, idade, sexo, objetivo, calorias_add, proteina_add, carboidrato_add, n_trials):
+def run_optimization(calorias_alvo, proteina_alvo, carboidrato_alvo, alimentos, peso, idade, sexo, objetivo, calorias_add, proteina_add, carboidrato_add, n_trials):
     global resultados
     resultados = {}
     resultados['study'], resultados['best_params'], resultados['best_validity'], resultados['calorias_alvo'], \
@@ -165,7 +165,10 @@ n_trials = st.number_input('Número de Trials', value=100)
 
 if st.button('Executar Otimização'):
     with st.spinner('Executando otimização...'):
-        run_optimization(st.session_state['alimentos'],
+        run_optimization(st.session_state['calorias_alvo'],
+                         st.session_state['proteina_alvo'],
+                         st.session_state['carboidrato_alvo'],
+                         st.session_state['alimentos'],
                          st.session_state['peso'], 
                          st.session_state['idade'], 
                          st.session_state['sexo'], 

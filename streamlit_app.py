@@ -149,9 +149,9 @@ def run_optimization(peso, idade, sexo, objetivo, calorias_add, proteina_add, ca
 st.title('Otimização de Nutrição')
 
 # Widgets para entrada de dados do usuário
-calorias_add = st.number_input('Calorias Adicionais', value=0.0)
-proteina_add = st.number_input('Proteína Adicional (g)', value=0.0)
-carboidrato_add = st.number_input('Carboidrato Adicional (g)', value=0.0)
+calorias_add = st.number_input('Calorias Adicionais', value=0)
+proteina_add = st.number_input('Proteína Adicional (g)', value=0)
+carboidrato_add = st.number_input('Carboidrato Adicional (g)', value=0)
 n_trials = st.number_input('Número de Trials', value=100)
 
 if st.button('Executar Otimização'):

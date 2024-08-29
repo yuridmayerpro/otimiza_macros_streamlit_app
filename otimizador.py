@@ -20,7 +20,7 @@ def early_stopping_callback(study, trial):
     if study.best_value is not None and study.best_value < 0.9:
         study.stop()
 
-def otimiza(alimentos, peso, idade, sexo, objetivo, calorias_add, proteina_add, carboidrato_add, n_trials, df_taco):
+def otimiza(calorias_alvo, gramas_proteina, gramas_carboidrato, alimentos, peso, idade, sexo, objetivo, calorias_add, proteina_add, carboidrato_add, n_trials, df_taco):
     alimentos_selecionados = list(alimentos.keys())
     intervalos = list(alimentos.values())
     order_dict = {alimento: index for index, alimento in enumerate(alimentos_selecionados)}
@@ -35,14 +35,6 @@ def otimiza(alimentos, peso, idade, sexo, objetivo, calorias_add, proteina_add, 
     Energia_kcal_100g = df_.Energia_kcal_100g.values
     Proteina_g_100g = df_.Proteina_g_100g.values
     Carbohidratos_g_100g = df_.Carbohidratos_g_100g.values
-
-    calorias_alvo1, gramas_proteina1, gramas_carboidrato1, gramas_gordura1 = calcula_metas_macronutrientes1(peso, idade, sexo, objetivo)
-    calorias_alvo2, gramas_proteina2, gramas_carboidrato2, gramas_gordura2 = calcula_metas_macronutrientes2(peso, idade, objetivo)
-    calorias_alvo3, gramas_proteina3, gramas_carboidrato3, gramas_gordura3 = calcula_metas_macronutrientes3(peso, idade, sexo, objetivo)
-
-    calorias_alvo = int(round(np.average([calorias_alvo1, calorias_alvo2, calorias_alvo3]), 0))
-    gramas_proteina = int(round(np.average([gramas_proteina1, gramas_proteina2, gramas_proteina3]), 0))
-    gramas_carboidrato = int(round(np.average([gramas_carboidrato1, gramas_carboidrato2, gramas_carboidrato3]), 0))
 
     optuna.logging.set_verbosity(optuna.logging.WARNING)
 

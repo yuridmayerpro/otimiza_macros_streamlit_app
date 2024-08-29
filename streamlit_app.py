@@ -156,7 +156,7 @@ n_trials = st.number_input('Número de Trials', value=100)
 
 if st.button('Executar Otimização'):
     with st.spinner('Executando otimização...'):
-        run_optimization(alimentos,
+        run_optimization(st.session_state['alimentos'],
                          peso, 
                          idade, 
                          sexo, 

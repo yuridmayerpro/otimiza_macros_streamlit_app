@@ -39,42 +39,32 @@ df_taco = load_data_from_drive(download_url)
 
 
 ####################### CÁLCULO DOS MACROS #######################
-# Inicialização das variáveis no session_state se ainda não existirem
-if 'peso' not in st.session_state:
-    st.session_state['peso'] = 80
-if 'idade' not in st.session_state:
-    st.session_state['idade'] = 30
-if 'sexo' not in st.session_state:
-    st.session_state['sexo'] = 'm'
-if 'objetivo' not in st.session_state:
-    st.session_state['objetivo'] = 'hipertrofia'
-
 # Campos de entrada
-st.session_state['peso'] = st.number_input("Peso (kg)", min_value=1, value=st.session_state['peso'], step=1)
-st.session_state['idade'] = st.number_input("Idade", min_value=0, value=st.session_state['idade'], step=1)
-st.session_state['sexo'] = st.selectbox("Sexo", options=['m', 'f'], index=['m', 'f'].index(st.session_state['sexo']))
-st.session_state['objetivo'] = st.selectbox("Objetivo", options=['hipertrofia'], index=['hipertrofia'].index(st.session_state['objetivo']))
+peso = st.number_input("Peso (kg)", min_value=1, value=80, step=1)
+idade = st.number_input("Idade", min_value=0, value=30, step=1)
+sexo = st.selectbox("Sexo", options=['m', 'f'])
+objetivo = st.selectbox("Objetivo", options=['hipertrofia'], index=['hipertrofia'])
 
 # Botão para calcular os macronutrientes
 if st.button("Calcular Macros"):
     # Calcula os macros
     calorias_alvo1, gramas_proteina1, gramas_carboidrato1, gramas_gordura1 = calcula_metas_macronutrientes1(
-        st.session_state['peso'], 
-        st.session_state['idade'], 
-        st.session_state['sexo'], 
-        st.session_state['objetivo']
+        peso, 
+        idade, 
+        sexo, 
+        objetivo
     )
     calorias_alvo2, gramas_proteina2, gramas_carboidrato2, gramas_gordura2 = calcula_metas_macronutrientes2(
-        st.session_state['peso'], 
-        st.session_state['idade'], 
-        st.session_state['sexo'], 
-        st.session_state['objetivo']
+        peso, 
+        idade, 
+        sexo, 
+        objetivo
     )
     calorias_alvo3, gramas_proteina3, gramas_carboidrato3, gramas_gordura3 = calcula_metas_macronutrientes3(
-        st.session_state['peso'], 
-        st.session_state['idade'], 
-        st.session_state['sexo'], 
-        st.session_state['objetivo']
+        peso, 
+        idade, 
+        sexo, 
+        objetivo
     )
     
     st.session_state['calorias_alvo'] = int(round(np.average([calorias_alvo1, calorias_alvo2, calorias_alvo3]), 0))

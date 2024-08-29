@@ -62,8 +62,9 @@ if st.button("Calcular Macros"):
 
 
 ####################### SELEÇÃO DOS ALIMENTOS PELO USUÁRIO #######################
-# Inicializa o dicionário para armazenar os alimentos e seus limites
-alimentos = {}
+# Inicializa o dicionário na sessão, se ainda não existir
+if 'alimentos' not in st.session_state:
+    st.session_state['alimentos'] = {}
 
 # Função para adicionar alimento ao dicionário
 def adicionar_alimento():
@@ -71,31 +72,35 @@ def adicionar_alimento():
     limite_inferior = st.session_state.limite_inferior
     limite_superior = st.session_state.limite_superior
     if alimento and limite_inferior is not None and limite_superior is not None:
-        alimentos[alimento] = (limite_inferior, limite_superior)
+        st.session_state['alimentos'][alimento] = (limite_inferior, limite_superior)
         st.session_state.alimento = ''
         st.session_state.limite_inferior = 0
         st.session_state.limite_superior = 0
-        st.success(f'Alimento adicionado: {alimento} com limites ({limite_inferior}, {limite_superior})')
+        #st.success(f'Alimento adicionado: {alimento} com limites ({limite_inferior}, {limite_superior})')
 
 # Interface do usuário
 st.title('Adicionar Alimentos e Definir Limites')
 
-# Dropdown para selecionar o alimento
-st.selectbox(
-    'Selecione o Alimento',
-    df_taco['Alimento'].tolist(),
-    key='alimento'
-)
+# Verifique se df_taco tem valores
+if not df_taco.empty:
+    # Dropdown para selecionar o alimento
+    st.selectbox(
+        'Selecione o Alimento',
+        options=df_taco['Alimento'].tolist(),
+        key='alimento'
+    )
 
-# Widgets para limites inferiores e superiores
-st.number_input('Limite Inferior', key='limite_inferior', step=1)
-st.number_input('Limite Superior', key='limite_superior', step=1)
+    # Widgets para limites inferiores e superiores
+    st.number_input('Limite Inferior', key='limite_inferior', step=1)
+    st.number_input('Limite Superior', key='limite_superior', step=1)
 
-# Botão para adicionar alimento
-st.button('Adicionar Alimento', on_click=adicionar_alimento)
+    # Botão para adicionar alimento
+    st.button('Adicionar Alimento', on_click=adicionar_alimento)
 
-# Exibir o dicionário de alimentos e limites
-if alimentos:
-    st.subheader('Alimentos Selecionados:')
-    for alimento, limites in alimentos.items():
-        st.write(f'{alimento}: Limite Inferior = {limites[0]}, Limite Superior = {limites[1]}')
+    # Exibir o dicionário de alimentos e limites
+    if st.session_state['alimentos']:
+        st.subheader('Alimentos Selecionados:')
+        for alimento, limites in st.session_state['alimentos'].items():
+            st.write(f'{alimento}: Limite Inferior = {limites[0]}, Limite Superior = {limites[1]}')
+else:
+    st.error('DataFrame df_taco está vazio. Verifique os dados de entrada.')

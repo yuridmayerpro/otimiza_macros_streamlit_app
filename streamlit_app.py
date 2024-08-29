@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from calcula_macros import calcula_tmb, calcula_metas_macronutrientes1, calcula_metas_macronutrientes2, calcula_metas_macronutrientes3
 from otimizador import objective, early_stopping_callback, otimiza
+import optuna
 
 ####################### IMPORTAÇÃO DOS DADOS NECESSÁRIOS #######################
 # Function to load DataFrame from Google Drive

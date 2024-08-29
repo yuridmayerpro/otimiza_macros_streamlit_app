@@ -104,8 +104,8 @@ if st.session_state['alimentos']:
         list(st.session_state['alimentos'].items()),
         columns=['Alimento', 'Limites']
     )
-    alimentos_df['Limite Inferior'] = alimentos_df['Limites'].apply(lambda x: x[0])
-    alimentos_df['Limite Superior'] = alimentos_df['Limites'].apply(lambda x: x[1])
+    alimentos_df['Limite Inferior (g)'] = alimentos_df['Limites'].apply(lambda x: x[0])
+    alimentos_df['Limite Superior (g)'] = alimentos_df['Limites'].apply(lambda x: x[1])
     alimentos_df = alimentos_df.drop(columns=['Limites'])
     
     st.dataframe(alimentos_df, use_container_width=True, hide_index=True)

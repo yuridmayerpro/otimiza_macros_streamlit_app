@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 from calcula_macros import calcula_tmb, calcula_metas_macronutrientes1, calcula_metas_macronutrientes2, calcula_metas_macronutrientes3
 
+
+
 ####################### IMPORTAÇÃO DOS DADOS NECESSÁRIOS #######################
 # Function to load DataFrame from Google Drive
 @st.cache_data
@@ -33,6 +35,8 @@ df_taco = load_data_from_drive(download_url)
 #    except Exception as e:
 #        st.error(f"Erro ao carregar a tabela: {e}")
 
+
+
 ####################### CÁLCULO DOS MACROS #######################
 # Input fields
 peso = st.number_input("Peso (kg)", min_value=1, value=80, step=1)
@@ -55,7 +59,9 @@ if st.button("Calcular Macros"):
     st.write(f"Proteínas alvo: {proteina_alvo} g")
     st.write(f"Carboidratos alvo: {carboidrato_alvo} g")
 
-####################### SELEÇÃO DOS ALIMENTOS PELO USUÁRIP #######################
+
+
+####################### SELEÇÃO DOS ALIMENTOS PELO USUÁRIO #######################
 # Dicionário para armazenar os alimentos e seus limites
 alimentos = {}
 
@@ -67,9 +73,9 @@ def adicionar_alimento():
     
     if alimento and limite_inferior is not None and limite_superior is not None:
         alimentos[alimento] = (limite_inferior, limite_superior)
-        st.session_state['alimento'] = None
-        st.session_state['limite_inferior'] = 0
-        st.session_state['limite_superior'] = 0
+        st.session_state['alimento'] = alimentos
+        st.session_state['limite_inferior'] = limite_inferior
+        st.session_state['limite_superior'] = limite_superior
         st.success(f'Alimento adicionado: {alimento} com limites ({limite_inferior}, {limite_superior})')
 
 # Título da aplicação
@@ -92,8 +98,5 @@ st.button('Adicionar Alimento', on_click=adicionar_alimento)
 # Exibindo os alimentos e seus limites definidos em formato de tabela
 if alimentos:
     st.write("Alimentos adicionados:")
-    alimentos_df = pd.DataFrame([
-        {'Alimento': alimento, 'Limite Inferior': limites[0], 'Limite Superior': limites[1]} 
-        for alimento, limites in alimentos.items()
-    ])
+    alimentos_df = pd.DataFrame(alimentos)
     st.table(alimentos_df)
